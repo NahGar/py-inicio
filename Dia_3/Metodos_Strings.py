@@ -1,5 +1,3 @@
-from Dia_3.Index import resultado
-
 texto = "Este es el texto de Pepe"
 
 print(f"upper: {texto.upper()}")  # Convierte todo el texto a mayúsculas
