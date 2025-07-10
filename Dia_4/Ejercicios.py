@@ -164,3 +164,35 @@ lista_nombres = ["Marcos", "Laura", "Mónica", "Javier", "Celina", "Marta", "Dar
 mi_tupple = list(enumerate(lista_nombres))
 for indice, nombre in mi_tupple:
     print(f'{nombre} se encuentra en el índice {indice}')
+
+# Crea una lista formada por las tuplas (indice, elemento), formadas a partir de obtener mediante enumerate() los índices de cada caracter del string "Python".
+# Llama a la lista obtenida con el nombre de variable lista_indices
+letras = list("Python")
+lista_indices = list(enumerate(letras))
+
+# Imprime en pantalla únicamente los índices de aquellos nombres de la lista a continuación, que empiecen con M:
+lista_nombres = ["Marcos", "Laura", "Mónica", "Javier", "Celina", "Marta", "Darío", "Emiliano", "Melisa"]
+for indice, nombre in enumerate(lista_nombres):
+    if nombre[0].lower() == "m":
+        print(indice)
+
+# Muestra en pantalla frases como la del siguiente ejemplo: La capital de Alemania es Berlín
+# Utiliza la función zip, loops, y las siguientes listas de países y capitales para resolverlo rápida y eficientemente.
+capitales = ["Berlín", "Tokio", "París", "Helsinki", "Ottawa", "Canberra"]
+paises = ["Alemania", "Japón", "Francia", "Finlandia", "Canadá", "Australia"]
+
+lista = list(zip(capitales,paises))
+for capital,pais in lista:
+    print(f"La capital de {pais} es {capital}")
+
+# Crea un objeto zip formado a partir de listas, de un conjunto de marcas y productos que tú prefieras, dentro de la variable mi_zip.
+marcas = ['Adidas','Pepsi','Lays']
+productos = ['Camiseta','Refresco','Papas fritas']
+mi_zip = zip(marcas,productos)
+
+# Crea el zip con las traducciones los números del 1 al 5 en español, portugués e inglés (en el mismo orden), y convierte el objeto generado en una lista almacenada en la variable numeros:
+# [('uno', 'um', 'one'), ('dos', 'dois', 'two'), ... ]
+numEsp = ['uno','dos','tres','cuatro','cinco']
+numPor = ['um','dois','três','quatro','cinco']
+numEng = ['one','two','three','four','five']
+numeros = list(zip(numEsp,numPor,numEng))
