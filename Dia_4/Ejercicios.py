@@ -164,3 +164,32 @@ lista_nombres = ["Marcos", "Laura", "Mónica", "Javier", "Celina", "Marta", "Dar
 mi_tupple = list(enumerate(lista_nombres))
 for indice, nombre in mi_tupple:
     print(f'{nombre} se encuentra en el índice {indice}')
+
+
+# Obtén el valor máximo entre los valores de la siguiente lista, y almacénalo en una variable llamada valor_maximo
+lista_numeros = [44542247/2, 21310/5, 2134747*33, 44556475, 121676, 6654067, 353254, 123134, 55**12, 611**5]
+valor_maximo = max(lista_numeros)
+
+# Calcula la diferencia entre el valor máximo y el mínimo en la siguiente lista de números, y almacénalo en una variable llamada rango:
+lista_numeros = [44542247, 21310, 2134747, 44556475, 121676, 6654067, 353254, 123134, 552512, 611665]
+rango = max(lista_numeros) - min(lista_numeros)
+
+# Utilizando max(), min() y métodos de diccionarios, obtén el mínimo valor a partir del siguiente diccionario:
+# Almacena dicho valor en una variable llamada edad_minima.
+# También, obtén el nombre que se ubica último en orden alfabético, y almacénalo en una variable llamada ultimo_nombre.
+diccionario_edades = {"Carlos":55, "María":42, "Mabel":78, "José":44, "Lucas":24, "Rocío":35, "Sebastián":19, "Catalina":2,"Darío":49}
+edad_minima = min(diccionario_edades.values())
+ultimo_nombre = max(diccionario_edades)
+
+# Implementa la función randint() de la librería random que te permita obtener un número entero del 1 al 10, y almacena dicho valor en una variable llamada aleatorio
+from random import randint
+aleatorio = randint(1,10)
+
+# Implementa la función random() de la librería random que te permita obtener un número decimal entre 0 y 1, y almacena dicho valor en una variable llamada aleatorio
+from random import random
+aleatorio = random()
+
+# Utiliza el método choice() de la librería random para obtener un elemento al azar de la lista de nombres a continuación, y almacena el nombre escogido en una variable llamada sorteo.
+from random import choice
+nombres = ["Carlos", "Julia", "Nicole", "Laura", "Mailen"]
+sorteo = choice(nombres)
