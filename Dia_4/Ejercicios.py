@@ -196,3 +196,4 @@ numEsp = ['uno','dos','tres','cuatro','cinco']
 numPor = ['um','dois','três','quatro','cinco']
 numEng = ['one','two','three','four','five']
 numeros = list(zip(numEsp,numPor,numEng))
+
