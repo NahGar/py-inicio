@@ -224,3 +224,16 @@ aleatorio = random()
 from random import choice
 nombres = ["Carlos", "Julia", "Nicole", "Laura", "Mailen"]
 sorteo = choice(nombres)
+
+# Crea una lista valores_cuadrado formada por los números de la lista valores, elevados al cuadrado.
+valores = [1, 2, 3, 4, 5, 6, 9.5]
+valores_cuadrado = [valor ** 2 for valor in valores]
+
+# Crea una lista valores_pares formada por los números de la lista valores que (¡adivinaste!) sean pares.
+valores = [1, 2, 3, 4, 5, 6, 9.5]
+valores_pares = [valor for valor in valores if valor % 2 == 0]
+
+# Para la siguiente lista de temperaturas en grados Fahrenheit, expresa estos mismos valores en una nueva lista de valores de temperatura en grados Celsius. La conversión entre tipo de unidades es la siguiente:
+# °C = (°F - 32) * (5/9)
+temperatura_fahrenheit = [32, 212, 275]
+grados_celsius = [(valor - 32) * (5/9) for valor in temperatura_fahrenheit]
