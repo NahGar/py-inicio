@@ -174,4 +174,28 @@ def suma_absolutos(*args):
 def numeros_persona(nombre, *args):
     return f"{nombre}, la suma de tus números es {sum(args)}"
 
+# Crea una función llamada cantidad_atributos que cuente la cantidad de parémetros que se entregan, y devuelva esa cantidad como resultado.
+def cantidad_atributos(**kwargs):
+    cant_parametros = 0
+    for key, value in kwargs.items():
+        cant_parametros += 1
+
+    return cant_parametros
+
+# Crea una función llamada lista_atributos que devuelva en forma de lista los valores de los atributos entregados en forma
+# de palabras clave (keywords). La función debe preveer recibir cualquier cantidad de argumentos de este tipo.
+def lista_atributos(**kwargs):
+    lista = []
+    for key, value in kwargs.items():
+        lista.append(value)
+
+    return lista
+
+# Crea una función llamada describir_persona, que tome como parámetros su nombre y luego una cantidad indetermida de argumentos. Esta función deberá mostrar en pantalla:
+#     Características de {nombre}:     {nombre_argumento}: {valor_argumento}     {nombre_argumento}: {valor_argumento}
+# Por ejemplo: describir_persona("María", color_ojos="azules", color_pelo="rubio")
+def describir_persona(nombre, **kwargs):
+    print("Características de " + nombre + ":")
+    for key, value in kwargs.items():
+        print(f"{key}: {value}")
 
