@@ -39,7 +39,9 @@ def pedir_letra():
     return letra
 
 def validar_letra(letra):
-    if "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ".find(letra) != -1:
+    if letra == "" or len(letra) > 1:
+        return False
+    elif "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ".find(letra) != -1:
         return True
     else:
         return False
@@ -78,9 +80,12 @@ def gano_perdio(cantidad_vidas, letras_acertadas):
 
     return Estado_gano_perdio.SIGUE_JUGANDO
 
-def imprime_avance(letras_acertadas,cantidad_vidas):
+def imprime_avance(letras_acertadas,cantidad_vidas, lista_letras_usadas):
     print(" ".join(letras_acertadas))
+
     print(f"Vidas restantes: {cantidad_vidas}")
+    print(f"Letras utilizadas: {" ".join(lista_letras_usadas)}")
+
 
 
 def jugar():
@@ -89,13 +94,16 @@ def jugar():
 
     letras_palabra = []
     letras_acertadas = []
+
     for letra in palabra_juego:
         letras_palabra.append(letra)
         letras_acertadas.append("_")
 
     lista_letras_usadas = []
-    fin_juego = False
 
+    imprime_avance(letras_acertadas, cantidad_vidas, lista_letras_usadas)
+
+    fin_juego = False
     while not fin_juego:
         letra = pedir_letra()
         estado_ckeck = check_letra(letra,palabra_juego,lista_letras_usadas,letras_acertadas)
@@ -110,7 +118,6 @@ def jugar():
             fin_juego = True
             print(f"Ha acertado la palabra")
 
-        imprime_avance(letras_acertadas,cantidad_vidas)
-
+        imprime_avance(letras_acertadas,cantidad_vidas, lista_letras_usadas)
 
 jugar()
