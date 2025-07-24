@@ -50,6 +50,20 @@ archivo = open("registro.txt")
 print(archivo.read())
 archivo.close()
 
+# Almacena en la variable ruta_base, un objeto Path que señale el directorio base del usuario.
+from pathlib import Path
+ruta_base = Path.home()
+
+# Implementa y crea una ruta relativa que nos permita llegar al archivo "practicas_path.py" a partir de la siguiente estructura de carpetas:
+#from pathlib import Path
+
+ruta = Path("Curso Python","Día 6","practicas_path.py")
+
+# Implementa y crea una ruta absoluta que nos permita llegar al archivo "practicas_path.py" a partir de la siguiente estructura de carpetas
+#from pathlib import Path
+
+ruta = Path(Path.home(),"Curso Python","Día 6","practicas_path.py")
+
 
 
 
