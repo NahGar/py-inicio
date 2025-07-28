@@ -64,8 +64,24 @@ ruta = Path("Curso Python","Día 6","practicas_path.py")
 
 ruta = Path(Path.home(),"Curso Python","Día 6","practicas_path.py")
 
+# Crea una función llamada abrir_leer() que abra (open) un archivo indicado como parámetro, y devuelva su contenido (read).
+def abrir_leer(path):
+    archivo = open(path)
+    return archivo.read()
+
+# Crea una función llamada sobrescribir() que abra (open) un archivo indicado como parámetro, y sobrescriba
+# cualquier contenido anterior por el texto "contenido eliminado"
+def sobrescribir(path):
+    archivo = open(path,"w")
+    archivo.write("contenido eliminado")
+    archivo.close()
 
 
-
+# Crea una función llamada registro_error() que abra (open) un archivo indicado como parámetro, y lo actualice
+# añadiendo una línea al final que indique "se ha registrado un error de ejecución". Finalmente, debe cerrar el archivo abierto.
+def registro_error(path):
+    archivo = open(path,"a")
+    archivo.write("se ha registrado un error de ejecución")
+    archivo.close()
 
 

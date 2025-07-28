@@ -1,6 +1,6 @@
 from pathlib import Path, PureWindowsPath
 
-archivo = Path("D:/Desarrollo/Personal/Python/Dia_6/prueba.txt")
+archivo = Path("D:/Desarrollo/Personal/Python/inicio/Dia_6/prueba.txt")
 print(archivo.read_text(encoding="utf-8"))
 print("name:",archivo.name)
 print("suffix:",archivo.suffix)

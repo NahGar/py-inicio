@@ -1,6 +1,7 @@
 from pathlib import Path
 
 base = Path.home()
+
 print("home:",base)
 # path soporta strings y objetos Path
 guia = Path(base,"España",Path("Barcelona","Sagrada_Familia.txt"))
