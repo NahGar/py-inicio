@@ -82,13 +82,16 @@ def carga_recetas(categoria):
     return dic_recetas
 
 def crea_receta(categoria):
-    nombre = input("Ingrese nombre de la receta:")
+    print("Ingrese nombre de la receta:")
+    nombre = input()
     nombre = nombre.replace(" ", "_") + ".txt"
-    contenido = input("Ingrese receta:")
+    print("Ingrese receta:")
+    contenido = input()
     path_archivo = Path(categoria[1], nombre)
     if not path_archivo.exists():
-        archivo = open(path_archivo, "w")
-        archivo.write(contenido)
+        # archivo = open(path_archivo, "w")
+        # archivo.write(contenido)
+        path_archivo.write_text(contenido)
         print("Receta generada")
     else:
         print("La receta ya existe")
@@ -145,8 +148,10 @@ while True:
             if seguir:
                 seguir, opcion_receta = elegir_receta(opcion_categoria[1])
             if seguir:
-                archivo = open(opcion_receta[1])
-                print(f"Receta: {archivo.read()}")
+
+                # archivo = open(opcion_receta[1])
+                # print(f"Receta: {archivo.read()}")
+                print(f"Receta: {Path.read_text(opcion_receta[1])}")
                 input("Presione cualquier tecla para continuar")
 
         case "2": # pide categoría, pide nombre y contenido, crea archivo
