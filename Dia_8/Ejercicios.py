@@ -36,6 +36,46 @@ def abrir_archivo(nombre_archivo):
     finally:
         print("Finalizando ejecución")
 
+# Crea un generador (almacenado en la variable generador) que sea capaz de devolver una secuencia infinita de números, iniciando desde el 1, y entregando un número consecutivo superior cada vez que sea llamada mediante next.
+def mi_generador():
+    x = 0
+    while True:
+        x += 1
+        yield x
+
+generador = mi_generador()
+
+# Crea un generador (almacenado en la variable generador) que sea capaz de devolver de manera indefinida múltiplos de 7, iniciando desde el mismo 7, y que cada vez que sea llamado devuelva el siguiente múltiplo (7, 14, 21, 28...).
+def mi_generador():
+    x = 0
+    while True:
+        x += 7
+        yield x
+
+generador = mi_generador()
+
+# Crea un generador que reste una a una las vidas de un personaje de videojuego, y devuelva un mensaje cada vez que sea llamado:
+# "Te quedan 3 vidas" "Te quedan 2 vidas" "Te queda 1 vida" "Game Over" Almacena el generador en la variable perder_vida
+def mi_generador():
+    vidasMax = 3
+    for vidas in range(vidasMax, -1, -1):
+        if vidas == 0:
+            yield "Game Over"
+        else:
+            str_vida = "vida" if vidas == 1 else "vidas"
+            str_queda = "queda" if vidas == 1 else "quedan"
+            yield f"Te {str_queda} {vidas} {str_vida}"
+
+perder_vida = mi_generador()
+
+
+
+
+
+
+
+
+
 
 
 
