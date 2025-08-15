@@ -32,5 +32,16 @@ import datetime
 hoy = datetime.datetime.now()
 minutos = hoy.minute
 
+# Obtén el logaritmo base 10 del número 25, y almacena el resultado en la variable resultado.
+import math
+resultado = math.log10(25)
+
+# Obten la raíz cuadrada de pi con la constante math.pi y el método math.sqrt() . Almacena el resultado obtenido en la variable resultado.
+resultado = math.sqrt(math.pi)
+
+# Encuentra el factorial de 7 y almacena el resultado en la variable resultado.
+resultado = math.factorial(7)
+
+
 
 
