@@ -35,6 +35,7 @@ shutil.move('curso.txt','.\\auxiliar')
 # elimina carpeta y contenido y no va a la papelera
 shutil.rmtree('.\\auxiliar')
 
+# pip install send2trash
 import send2trash
 
 crear_archivo('curso1.txt')
