@@ -1,5 +1,29 @@
 from tkinter import *
 
+operador = ''
+
+def click_boton_calculadora(tecla):
+    global operador
+    operador += str(tecla)
+    visor_calculadora.delete(0, END)
+    visor_calculadora.insert(END, operador)
+
+def borrar_calculadora():
+    global operador
+    operador = ''
+    visor_calculadora.delete(0, END)
+
+def resultado_calculadora():
+    global operador
+    try:
+        resultado = str(eval(operador))
+        visor_calculadora.delete(0, END)
+        visor_calculadora.insert(0, resultado)
+    except:
+        visor_calculadora.delete(0, END)
+        visor_calculadora.insert(0, 'ERROR')
+    operador = ''
+
 aplicacion = Tk()
 
 # pone tamaño y ubicación
@@ -207,6 +231,42 @@ for boton in botones:
 texto_recibo = Text(panel_recibo, font=('Arial',12,'bold'), bd=1, width=42, height=10)
 texto_recibo.grid(row=0,column=0)
 
+# calculadora
+visor_calculadora = Entry(panel_calculadora, font=('Arial',15,'bold'), width=35, bd=1, state='readonly')
+visor_calculadora.grid(row=0, column=0, columnspan=4)
+
+botones_calculadora = ['7','8','9','+','4','5','6','-','1','2','3','x','C','0','=','/']
+botones_para_evento = []
+fila = 1
+columna = 0
+for boton in botones_calculadora:
+    boton = Button(panel_calculadora, text=boton.title(), font=('Arial',13,'bold'), fg='white', bg='azure4',
+                   bd=1, width=8)
+
+    botones_para_evento.append(boton)
+
+    boton.grid(row=fila, column=columna)
+    columna += 1
+    if columna > 3:
+        fila += 1
+        columna = 0
+
+botones_para_evento[0].config(command=lambda : click_boton_calculadora('7'))
+botones_para_evento[1].config(command=lambda : click_boton_calculadora('8'))
+botones_para_evento[2].config(command=lambda : click_boton_calculadora('9'))
+botones_para_evento[3].config(command=lambda : click_boton_calculadora('+'))
+botones_para_evento[4].config(command=lambda : click_boton_calculadora('4'))
+botones_para_evento[5].config(command=lambda : click_boton_calculadora('5'))
+botones_para_evento[6].config(command=lambda : click_boton_calculadora('6'))
+botones_para_evento[7].config(command=lambda : click_boton_calculadora('-'))
+botones_para_evento[8].config(command=lambda : click_boton_calculadora('1'))
+botones_para_evento[9].config(command=lambda : click_boton_calculadora('2'))
+botones_para_evento[10].config(command=lambda : click_boton_calculadora('3'))
+botones_para_evento[11].config(command=lambda : click_boton_calculadora('x'))
+botones_para_evento[12].config(command=lambda : borrar_calculadora())
+botones_para_evento[13].config(command=lambda : click_boton_calculadora('0'))
+botones_para_evento[14].config(command=lambda : resultado_calculadora())
+botones_para_evento[15].config(command=lambda : click_boton_calculadora('/'))
 
 
 # evitar que la pantalla se cierre
