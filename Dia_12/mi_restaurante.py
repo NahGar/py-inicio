@@ -1,6 +1,11 @@
 from tkinter import *
+import random
+import datetime
 
 operador = ''
+precios_comida = [10.0,11.0,12.0,13.0,14.0,15.0,16.0,17.0]
+precios_bebida = [20.0,21.0,22.0,23.0,24.0,25.0,26.0,27.0]
+precios_postre = [30.0,31.0,32.0,33.0,34.0,35.0,36.0,37.0]
 
 def click_boton_calculadora(tecla):
     global operador
@@ -29,7 +34,9 @@ def revisar_check():
     for c in cuadros_comida:
         if variables_comida[x].get() == 1:
             cuadros_comida[x].config(state=NORMAL)
-            cuadros_comida[x].delete(0, END)
+            if cuadros_comida[x].get() == '0':
+                cuadros_comida[x].delete(0, END)
+                cuadros_comida[x].insert(END, '1')
             cuadros_comida[x].focus()
         else:
             cuadros_comida[x].config(state=DISABLED)
@@ -40,7 +47,9 @@ def revisar_check():
     for c in cuadros_bebida:
         if variables_bebida[x].get() == 1:
             cuadros_bebida[x].config(state=NORMAL)
-            cuadros_bebida[x].delete(0, END)
+            if cuadros_bebida[x].get() == '0':
+                cuadros_bebida[x].delete(0, END)
+                cuadros_bebida[x].insert(END, '1')
             cuadros_bebida[x].focus()
         else:
             cuadros_bebida[x].config(state=DISABLED)
@@ -51,12 +60,93 @@ def revisar_check():
     for c in cuadros_postre:
         if variables_postre[x].get() == 1:
             cuadros_postre[x].config(state=NORMAL)
-            cuadros_postre[x].delete(0, END)
+            if cuadros_postre[x].get() == '0':
+                cuadros_postre[x].delete(0, END)
+                cuadros_postre[x].insert(END, '1')
             cuadros_postre[x].focus()
         else:
             cuadros_postre[x].config(state=DISABLED)
             texto_postre[x].set('0')
         x += 1
+
+def click_total():
+    subtotal_comida = 0
+    x = 0
+    for cantidad in texto_comida:
+        if cantidad.get() != '':
+            subtotal_comida += float(cantidad.get()) * precios_comida[x]
+        x += 1
+
+    subtotal_bebida = 0
+    x = 0
+    for cantidad in texto_bebida:
+        if cantidad.get() != '':
+            subtotal_bebida += float(cantidad.get()) * precios_bebida[x]
+        x += 1
+
+    subtotal_postre = 0
+    x = 0
+    for cantidad in texto_postre:
+        if cantidad.get() != '':
+            subtotal_postre += float(cantidad.get()) * precios_postre[x]
+        x += 1
+
+    subtotal = subtotal_comida + subtotal_bebida + subtotal_postre
+    impuesto = subtotal * 0.22
+    total = subtotal + impuesto
+
+    var_costo_comida.set(f'$ {round(subtotal_comida,2)}')
+    var_costo_bebida.set(f'$ {round(subtotal_bebida,2)}')
+    var_costo_postre.set(f'$ {round(subtotal_postre,2)}')
+    var_subtotal.set(f'$ {round(subtotal,2)}')
+    var_impuesto.set(f'$ {round(impuesto,2)}')
+    var_total.set(f'$ {round(total,2)}')
+
+def click_recibo():
+    click_total()
+
+    texto_recibo.delete(1.0, END)
+    num_recibo = f'N# {random.randint(1000,9999)}'
+    fecha = datetime.datetime.now()
+    fecha_recibo = f'{fecha.day}/{fecha.month}/{fecha.year} - {fecha.hour}:{fecha.minute}'
+    texto_recibo.insert(END,f'Datos:\t{num_recibo}\t\t{fecha_recibo}\n')
+    texto_recibo.insert(END,f'*' * 63 + '\n')
+    texto_recibo.insert(END,'Item\t\tCant.\tCosto item\n')
+    texto_recibo.insert(END, f'-' * 75 + '\n')
+
+    x = 0
+    for item in texto_comida:
+        if item.get() != '0':
+            texto_recibo.insert(END,f'{lista_comidas[x]}\t\t{item.get()}\t$ {int(item.get()) * precios_comida[x]}\n')
+        x += 1
+
+    x = 0
+    for item in texto_bebida:
+        if item.get() != '0':
+            texto_recibo.insert(END, f'{lista_bebidas[x]}\t\t{item.get()}\t$ {int(item.get()) * precios_bebida[x]}\n')
+        x += 1
+
+    x = 0
+    for item in texto_postre:
+        if item.get() != '0':
+            texto_recibo.insert(END, f'{lista_postres[x]}\t\t{item.get()}\t$ {int(item.get()) * precios_postre[x]}\n')
+        x += 1
+
+    texto_recibo.insert(END, f'-' * 75 + '\n')
+    texto_recibo.insert(END, f'Costo comida: {var_costo_comida.get()}\n')
+    texto_recibo.insert(END, f'Costo bebida: {var_costo_bebida.get()}\n')
+    texto_recibo.insert(END, f'Costo postre: {var_costo_postre.get()}\n')
+    texto_recibo.insert(END, f'-' * 75 + '\n')
+    texto_recibo.insert(END, f'Subtotal: {var_subtotal.get()}\n')
+    texto_recibo.insert(END, f'Impuesto: {var_impuesto.get()}\n')
+    texto_recibo.insert(END, f'Total: {var_total.get()}\n')
+
+def click_guardar():
+    pass
+
+def click_reiniciar():
+    pass
+
 
 aplicacion = Tk()
 
@@ -136,7 +226,7 @@ for comida in lista_comidas:
     texto_comida[contador] = StringVar()
     texto_comida[contador].set('0')
     cuadros_comida[contador] = Entry(panel_comidas, font=('Arial',15,'bold'),bd=1,width=6,state=DISABLED,
-                                     textvariable=texto_comida[contador] ,justify=RIGHT)
+                                     textvariable=texto_comida[contador], justify=RIGHT)
     cuadros_comida[contador].grid(row=contador, column=1)
 
     contador += 1
@@ -202,7 +292,7 @@ etiqueta_costo_comida = Label(panel_costos, text='Costo comida', font=('Arial',1
 etiqueta_costo_comida.grid(row=0,column=0)
 
 texto_costo_comida = Entry(panel_costos, font=('Arial',12,'bold'), bd=1, width=10, state='readonly',
-                           textvariable=var_costo_comida)
+                           textvariable=var_costo_comida, justify=RIGHT)
 texto_costo_comida.grid(row=0,column=1, padx=41)
 
 # etiquetas de costo y campos de entrada
@@ -210,7 +300,7 @@ etiqueta_costo_bebida = Label(panel_costos, text='Costo bebida', font=('Arial',1
 etiqueta_costo_bebida.grid(row=1,column=0)
 
 texto_costo_bebida = Entry(panel_costos, font=('Arial',12,'bold'), bd=1, width=10, state='readonly',
-                           textvariable=var_costo_bebida)
+                           textvariable=var_costo_bebida, justify=RIGHT)
 texto_costo_bebida.grid(row=1,column=1, padx=41)
 
 # etiquetas de costo y campos de entrada
@@ -218,7 +308,7 @@ etiqueta_costo_bebida = Label(panel_costos, text='Costo bebida', font=('Arial',1
 etiqueta_costo_bebida.grid(row=0,column=0)
 
 texto_costo_bebida = Entry(panel_costos, font=('Arial',12,'bold'), bd=1, width=10, state='readonly',
-                           textvariable=var_costo_bebida)
+                           textvariable=var_costo_bebida, justify=RIGHT)
 texto_costo_bebida.grid(row=2,column=1, padx=41)
 
 # etiquetas de costo y campos de entrada
@@ -226,7 +316,7 @@ etiqueta_costo_postre = Label(panel_costos, text='Costo postre', font=('Arial',1
 etiqueta_costo_postre.grid(row=2,column=0)
 
 texto_costo_postre = Entry(panel_costos, font=('Arial',12,'bold'), bd=1, width=10, state='readonly',
-                           textvariable=var_costo_postre)
+                           textvariable=var_costo_postre, justify=RIGHT)
 texto_costo_postre.grid(row=2,column=1, padx=41)
 
 # etiquetas de costo y campos de entrada
@@ -234,7 +324,7 @@ etiqueta_subtotal = Label(panel_costos, text='Subtotal', font=('Arial',12,'bold'
 etiqueta_subtotal.grid(row=0,column=2)
 
 texto_subtotal = Entry(panel_costos, font=('Arial',12,'bold'), bd=1, width=10, state='readonly',
-                           textvariable=var_subtotal)
+                           textvariable=var_subtotal, justify=RIGHT)
 texto_subtotal.grid(row=0,column=3, padx=41)
 
 # etiquetas de costo y campos de entrada
@@ -242,7 +332,7 @@ etiqueta_impuesto = Label(panel_costos, text='Impuesto', font=('Arial',12,'bold'
 etiqueta_impuesto.grid(row=1,column=2)
 
 texto_impuesto = Entry(panel_costos, font=('Arial',12,'bold'), bd=1, width=10, state='readonly',
-                           textvariable=var_impuesto)
+                           textvariable=var_impuesto, justify=RIGHT)
 texto_impuesto.grid(row=1,column=3, padx=41)
 
 # etiquetas de costo y campos de entrada
@@ -250,16 +340,24 @@ etiqueta_total = Label(panel_costos, text='Total', font=('Arial',12,'bold'), bg=
 etiqueta_total.grid(row=2,column=2)
 
 texto_total = Entry(panel_costos, font=('Arial',12,'bold'), bd=1, width=10, state='readonly',
-                           textvariable=var_total)
+                           textvariable=var_total, justify=RIGHT)
 texto_total.grid(row=2,column=3, padx=41)
 
 # botones
 botones = ['total','recibo','guardar','reiniciar']
+botones_creados = []
 columnas = 0
 for boton in botones:
     boton = Button(panel_botones, text=boton.title(), font=('Arial',12,'bold'), fg='white', bg='azure4', bd=1, width=9)
+    botones_creados.append(boton)
     boton.grid(row=0,column=columnas)
     columnas += 1
+
+botones_creados[0].config(command=click_total)
+botones_creados[1].config(command=click_recibo)
+botones_creados[2].config(command=click_guardar)
+botones_creados[3].config(command=click_reiniciar)
+
 
 # area recibo
 texto_recibo = Text(panel_recibo, font=('Arial',12,'bold'), bd=1, width=42, height=10)
