@@ -24,6 +24,40 @@ def resultado_calculadora():
         visor_calculadora.insert(0, 'ERROR')
     operador = ''
 
+def revisar_check():
+    x = 0
+    for c in cuadros_comida:
+        if variables_comida[x].get() == 1:
+            cuadros_comida[x].config(state=NORMAL)
+            cuadros_comida[x].delete(0, END)
+            cuadros_comida[x].focus()
+        else:
+            cuadros_comida[x].config(state=DISABLED)
+            texto_comida[x].set('0')
+        x += 1
+
+    x = 0
+    for c in cuadros_bebida:
+        if variables_bebida[x].get() == 1:
+            cuadros_bebida[x].config(state=NORMAL)
+            cuadros_bebida[x].delete(0, END)
+            cuadros_bebida[x].focus()
+        else:
+            cuadros_bebida[x].config(state=DISABLED)
+            texto_bebida[x].set('0')
+        x += 1
+
+    x = 0
+    for c in cuadros_postre:
+        if variables_postre[x].get() == 1:
+            cuadros_postre[x].config(state=NORMAL)
+            cuadros_postre[x].delete(0, END)
+            cuadros_postre[x].focus()
+        else:
+            cuadros_postre[x].config(state=DISABLED)
+            texto_postre[x].set('0')
+        x += 1
+
 aplicacion = Tk()
 
 # pone tamaño y ubicación
@@ -93,7 +127,7 @@ for comida in lista_comidas:
     variables_comida.append('')
     variables_comida[contador] = IntVar()
     comida = Checkbutton(panel_comidas, text=comida.title(), font=('Arial',15,'bold'), onvalue=1, offvalue=0,
-                         variable=variables_comida[contador])
+                         variable=variables_comida[contador], command=revisar_check)
     comida.grid(row=contador, column=0, sticky=W)
 
     # crear cuadros de entrada
@@ -117,7 +151,7 @@ for bebida in lista_bebidas:
     variables_bebida.append('')
     variables_bebida[contador] = IntVar()
     bebida = Checkbutton(panel_bebidas, text=bebida.title(), font=('Arial',15,'bold'), onvalue=1, offvalue=0,
-                         variable=variables_bebida[contador])
+                         variable=variables_bebida[contador], command=revisar_check)
     bebida.grid(row=contador, column=0, sticky=W)
 
     # crear cuadros de entrada
@@ -141,7 +175,7 @@ for postre in lista_postres:
     variables_postre.append('')
     variables_postre[contador] = IntVar()
     postre = Checkbutton(panel_postres, text=postre.title(), font=('Arial',15,'bold'), onvalue=1, offvalue=0,
-                         variable=variables_postre[contador])
+                         variable=variables_postre[contador], command=revisar_check)
     postre.grid(row=contador, column=0, sticky=W)
 
     # crear cuadros de entrada
