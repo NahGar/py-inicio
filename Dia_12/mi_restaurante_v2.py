@@ -1,9 +1,12 @@
 from tkinter import *
-from tkinter import filedialog, messagebox
+from tkinter import filedialog, messagebox, ttk
 import random
 import datetime
+import json
 
 operador = ''
+ventas = []
+
 precios_comida = [10.0,11.0,12.0,13.0,14.0,15.0,16.0,17.0]
 precios_bebida = [20.0,21.0,22.0,23.0,24.0,25.0,26.0,27.0]
 precios_postre = [30.0,31.0,32.0,33.0,34.0,35.0,36.0,37.0]
@@ -104,43 +107,74 @@ def click_total():
     var_total.set(f'$ {round(total,2)}')
 
 def click_recibo():
-    click_total()
-
     texto_recibo.delete(1.0, END)
-    num_recibo = f'N# {random.randint(1000,9999)}'
+    num_recibo_int = random.randint(1000,9999)
+    num_recibo_str = f'N# {num_recibo_int}'
     fecha = datetime.datetime.now()
     fecha_recibo = f'{fecha.day}/{fecha.month}/{fecha.year} - {fecha.hour}:{fecha.minute}'
-    texto_recibo.insert(END,f'Datos:\t{num_recibo}\t\t{fecha_recibo}\n')
+    texto_recibo.insert(END,f'Datos:\t{num_recibo_str}\t\t{fecha_recibo}\n')
     texto_recibo.insert(END,f'*' * 63 + '\n')
     texto_recibo.insert(END,'Item\t\tCant.\tCosto item\n')
     texto_recibo.insert(END, f'-' * 75 + '\n')
 
+    click_total()
+
+    detalle_venta_struct = []
     x = 0
     for item in texto_comida:
         if item.get() != '0':
-            texto_recibo.insert(END,f'{lista_comidas[x]}\t\t{item.get()}\t$ {int(item.get()) * precios_comida[x]}\n')
+            cantidad = int(item.get())
+            precio = precios_comida[x]
+            importe = cantidad * precio
+            texto_recibo.insert(END,f'{lista_comidas[x]}\t\t{cantidad}\t$ {importe}\n')
+            detalle_venta_struct.append({'item': lista_comidas[x], 'cantidad': cantidad, 'precio': precio, 'importe': importe})
         x += 1
 
     x = 0
     for item in texto_bebida:
         if item.get() != '0':
-            texto_recibo.insert(END, f'{lista_bebidas[x]}\t\t{item.get()}\t$ {int(item.get()) * precios_bebida[x]}\n')
+            cantidad = int(item.get())
+            precio = precios_bebida[x]
+            importe = cantidad * precio
+            texto_recibo.insert(END, f'{lista_bebidas[x]}\t\t{cantidad}\t$ {importe}\n')
+            detalle_venta_struct.append({'item': lista_bebidas[x], 'cantidad': cantidad, 'precio': precio, 'importe': importe})
         x += 1
 
     x = 0
     for item in texto_postre:
         if item.get() != '0':
-            texto_recibo.insert(END, f'{lista_postres[x]}\t\t{item.get()}\t$ {int(item.get()) * precios_postre[x]}\n')
+            cantidad = int(item.get())
+            precio = precios_postre[x]
+            importe = cantidad * precio
+            texto_recibo.insert(END, f'{lista_postres[x]}\t\t{cantidad}\t$ {importe}\n')
+            detalle_venta_struct.append({'item': lista_postres[x], 'cantidad': cantidad, 'precio': precio, 'importe': importe})
         x += 1
 
     texto_recibo.insert(END, f'-' * 75 + '\n')
-    texto_recibo.insert(END, f'Costo comida: {var_costo_comida.get()}\n')
-    texto_recibo.insert(END, f'Costo bebida: {var_costo_bebida.get()}\n')
-    texto_recibo.insert(END, f'Costo postre: {var_costo_postre.get()}\n')
+    # Los costos por categoría ya no son necesarios en el detalle estructurado, pero los dejamos en el recibo visual
+    subtotal_comida = sum(i['importe'] for i in detalle_venta_struct if i['item'] in lista_comidas)
+    subtotal_bebida = sum(i['importe'] for i in detalle_venta_struct if i['item'] in lista_bebidas)
+    subtotal_postre = sum(i['importe'] for i in detalle_venta_struct if i['item'] in lista_postres)
+    texto_recibo.insert(END, f'Costo comida: $ {subtotal_comida}\n')
+    texto_recibo.insert(END, f'Costo bebida: $ {subtotal_bebida}\n')
+    texto_recibo.insert(END, f'Costo postre: $ {subtotal_postre}\n')
     texto_recibo.insert(END, f'-' * 75 + '\n')
     texto_recibo.insert(END, f'Subtotal: {var_subtotal.get()}\n')
     texto_recibo.insert(END, f'Impuesto: {var_impuesto.get()}\n')
     texto_recibo.insert(END, f'Total: {var_total.get()}\n')
+
+    # Guardar venta
+    venta = {
+        'numero_recibo': num_recibo_int,
+        'fecha': fecha_recibo,
+        'subtotal': float(var_subtotal.get().replace('$ ','')),
+        'impuesto': float(var_impuesto.get().replace('$ ','')),
+        'total': float(var_total.get().replace('$ ','')),
+        'detalle': detalle_venta_struct
+    }
+    ventas.append(venta)
+    guardar_ventas()
+    actualizar_tabla_ventas()
 
 def click_guardar():
     click_recibo()
@@ -177,13 +211,76 @@ def click_reiniciar():
     var_impuesto.set('')
     var_total.set('')
 
+def guardar_ventas():
+    with open('ventas.json', 'w') as archivo:
+        json.dump(ventas, archivo, indent=4)
 
+def cargar_ventas():
+    global ventas
+    try:
+        with open('ventas.json', 'r') as archivo:
+            ventas = json.load(archivo)
+    except (FileNotFoundError, json.JSONDecodeError):
+        ventas = []
+    actualizar_tabla_ventas()
 
+def actualizar_tabla_ventas():
+    # Limpiar tabla
+    for item in tabla_ventas.get_children():
+        tabla_ventas.delete(item)
+
+    # Llenar tabla
+    for venta in ventas:
+        # El botón se manejará a través de un evento de clic en la celda
+        tabla_ventas.insert('', 'end', values=(
+            venta['fecha'],
+            f"N# {venta['numero_recibo']}",
+            f"$ {venta['subtotal']}",
+            f"$ {venta['impuesto']}",
+            f"$ {venta['total']}",
+            '...'
+        ), tags=(venta['numero_recibo'],))
+
+def mostrar_detalle_venta(event):
+    region = tabla_ventas.identify_region(event.x, event.y)
+    if region != "cell":
+        return
+
+    columna = tabla_ventas.identify_column(event.x)
+    if columna == "#6": # Columna del botón "..."
+        item_id = tabla_ventas.identify_row(event.y)
+        item_values = tabla_ventas.item(item_id, 'values')
+        numero_recibo_str = item_values[1]
+
+        venta_encontrada = next((v for v in ventas if f"N# {v['numero_recibo']}" == numero_recibo_str), None)
+
+        popup = Toplevel(aplicacion)
+        popup.title(f"Detalle Venta {numero_recibo_str}")
+        texto_detalle = Text(popup, font=('Arial', 12), width=60, height=20)
+        texto_detalle.pack(padx=10, pady=10)
+
+        if venta_encontrada:
+            # Reconstruir el recibo para mostrarlo en el popup
+            recibo_visual = f"Datos:\t{numero_recibo_str}\t\t{venta_encontrada['fecha']}\n"
+            recibo_visual += f'*' * 70 + '\n'
+            recibo_visual += 'Item\t\tCant.\tPrecio\tImporte\n'
+            recibo_visual += f'-' * 80 + '\n'
+            for item in venta_encontrada['detalle']:
+                recibo_visual += f"{item['item']}\t\t{item['cantidad']}\t$ {item['precio']}\t$ {item['importe']}\n"
+            recibo_visual += f'-' * 80 + '\n'
+            recibo_visual += f"Subtotal: $ {venta_encontrada['subtotal']}\n"
+            recibo_visual += f"Impuesto: $ {venta_encontrada['impuesto']}\n"
+            recibo_visual += f"Total: $ {venta_encontrada['total']}\n"
+            texto_detalle.insert(END, recibo_visual)
+        else:
+            texto_detalle.insert(END, "Detalle no encontrado.")
+
+        texto_detalle.config(state=DISABLED)
 
 aplicacion = Tk()
 
 # pone tamaño y ubicación
-aplicacion.geometry('1065x470+0+0')
+aplicacion.geometry('1065x680+0+0')
 
 aplicacion.resizable(0,0)
 
@@ -200,8 +297,20 @@ etiqueta_titulo = Label(panel_superior, text="Sistema de facturación", fg="azur
 etiqueta_titulo.grid(row=0,column=0)
 
 # panel izquierdo
-panel_izquierdo = Frame(aplicacion, bd=1, relief=FLAT)
-panel_izquierdo.pack(side=LEFT)
+panel_inferior = Frame(aplicacion, bd=1, relief=FLAT, bg='burlywood')
+panel_inferior.pack(side=BOTTOM, fill=X)
+
+# panel central que contendrá los paneles izquierdo y derecho
+panel_central = Frame(aplicacion, bd=1, relief=FLAT)
+panel_central.pack(side=TOP, fill=BOTH, expand=True)
+
+# panel izquierdo
+panel_izquierdo = Frame(panel_central, bd=1, relief=FLAT, bg='burlywood')
+panel_izquierdo.pack(side=LEFT, fill=BOTH, expand=True)
+
+# panel derecha
+panel_derecha = Frame(panel_central, bd=1, relief=FLAT, bg='burlywood')
+panel_derecha.pack(side=RIGHT, fill=BOTH, expand=True)
 
 # panel costos
 panel_costos = Frame(panel_izquierdo, bd=1, relief=FLAT, bg='azure4', padx=55)
@@ -218,10 +327,6 @@ panel_bebidas.pack(side=LEFT)
 # panel postres
 panel_postres = LabelFrame(panel_izquierdo,text='Postres', font=('Arial',15,'bold'), bd=1, relief=FLAT, bg='azure')
 panel_postres.pack(side=LEFT)
-
-# panel derecha
-panel_derecha = Frame(aplicacion, bd=1, relief=FLAT)
-panel_derecha.pack(side=RIGHT)
 
 # panel calculadora
 panel_calculadora = Frame(panel_derecha, bd=1, relief=FLAT, bg='burlywood')
@@ -336,14 +441,6 @@ texto_costo_bebida = Entry(panel_costos, font=('Arial',12,'bold'), bd=1, width=1
 texto_costo_bebida.grid(row=1,column=1, padx=41)
 
 # etiquetas de costo y campos de entrada
-etiqueta_costo_bebida = Label(panel_costos, text='Costo bebida', font=('Arial',12,'bold'), bg='azure4', fg='white')
-etiqueta_costo_bebida.grid(row=0,column=0)
-
-texto_costo_bebida = Entry(panel_costos, font=('Arial',12,'bold'), bd=1, width=10, state='readonly',
-                           textvariable=var_costo_bebida, justify=RIGHT)
-texto_costo_bebida.grid(row=2,column=1, padx=41)
-
-# etiquetas de costo y campos de entrada
 etiqueta_costo_postre = Label(panel_costos, text='Costo postre', font=('Arial',12,'bold'), bg='azure4', fg='white')
 etiqueta_costo_postre.grid(row=2,column=0)
 
@@ -432,6 +529,30 @@ botones_para_evento[13].config(command=lambda : click_boton_calculadora('0'))
 botones_para_evento[14].config(command=lambda : resultado_calculadora())
 botones_para_evento[15].config(command=lambda : click_boton_calculadora('/'))
 
+# Tabla de ventas
+estilo_tabla = ttk.Style()
+estilo_tabla.configure("Treeview.Heading", font=('Arial', 10, 'bold'))
+
+columnas = ('fecha', 'recibo', 'subtotal', 'impuesto', 'total', 'detalle')
+tabla_ventas = ttk.Treeview(panel_inferior, columns=columnas, show='headings', height=5)
+
+tabla_ventas.heading('fecha', text='Fecha y Hora')
+tabla_ventas.heading('recibo', text='Nº Recibo')
+tabla_ventas.heading('subtotal', text='Subtotal')
+tabla_ventas.heading('impuesto', text='Impuesto')
+tabla_ventas.heading('total', text='Total')
+tabla_ventas.heading('detalle', text='Detalle')
+
+tabla_ventas.column('fecha', width=150, anchor=W)
+tabla_ventas.column('recibo', width=80, anchor=CENTER)
+tabla_ventas.column('subtotal', width=80, anchor=E)
+tabla_ventas.column('impuesto', width=80, anchor=E)
+tabla_ventas.column('total', width=80, anchor=E)
+tabla_ventas.column('detalle', width=60, anchor=CENTER)
+
+tabla_ventas.pack(fill=X, padx=10, pady=10)
+tabla_ventas.bind('<Button-1>', mostrar_detalle_venta)
+cargar_ventas()
 
 # evitar que la pantalla se cierre
 aplicacion.mainloop()
