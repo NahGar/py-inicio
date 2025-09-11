@@ -9,6 +9,7 @@ import pyjokes
 import webbrowser
 import datetime
 import wikipedia
+import subprocess
 
 
 dias_semana = {0:'Lunes',1:'Martes',2:'Miércoles',3:'Jueves',4:'Viernes',5:'Sábado',6:'Domingo'}
@@ -75,6 +76,9 @@ def informar_hora():
 def saludo_inicial():
     hablar('Hola. Soy tu asistente virtual. ¿En qué puedo ayudarte?')
 
+def abrir_calculadora():
+    subprocess.Popen("calc")
+
 def pedir_cosas():
 
     saludo_inicial()
@@ -92,6 +96,10 @@ def pedir_cosas():
             print('Entra ' + pedido)
             hablar('Claro, estoy en eso')
             webbrowser.open('https://www.google.com')
+            continue
+
+        if 'abrir calculadora' in pedido:
+            abrir_calculadora()
             continue
 
         elif 'salir' in pedido:
