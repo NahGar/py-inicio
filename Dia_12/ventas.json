@@ -1,0 +1,44 @@
+[
+    {
+        "numero_recibo": 5437,
+        "fecha": "10/9/2025 - 16:56",
+        "subtotal": 60.0,
+        "impuesto": 13.2,
+        "total": 73.2,
+        "detalle": [
+            {
+                "item": "pollo",
+                "cantidad": 1,
+                "precio": 10.0,
+                "importe": 10.0
+            },
+            {
+                "item": "pepsi",
+                "cantidad": 1,
+                "precio": 20.0,
+                "importe": 20.0
+            },
+            {
+                "item": "isla flotante",
+                "cantidad": 1,
+                "precio": 30.0,
+                "importe": 30.0
+            }
+        ]
+    },
+    {
+        "numero_recibo": 5605,
+        "fecha": "10/9/2025 - 17:5",
+        "subtotal": 10.0,
+        "impuesto": 2.2,
+        "total": 12.2,
+        "detalle": [
+            {
+                "item": "pollo",
+                "cantidad": 1,
+                "precio": 10.0,
+                "importe": 10.0
+            }
+        ]
+    }
+]
